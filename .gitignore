@@ -1,0 +1,8 @@
+*
+
+!.gitignore
+!camera_adapter.c
+!filter_utils.c
+!filter_utils.h
+!shared_variables.h
+!Readme.md
