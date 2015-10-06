@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define __USE_BSD
-
 #include <fcntl.h>              /* low-level i/o */
 #include <unistd.h>
 #include <errno.h>
@@ -149,7 +147,8 @@ static void process_image(const void *p)
       YUV422_to_RGB(buffer_sdl + (y * WIDTH + x) * 3,
                     buffer_yuv + (y * WIDTH + x)*2);
 
-  apply_filter(buffer_sdl, filters[filter_no], KERNEL_SMALL_SIZE); //TODO unify this logic to add possibility easility pass extended filter
+
+  filters[filter_no]->func(&(filters[filter_no]->arg), buffer_sdl); //apply selected filter
 
   render(data_sf);
 }

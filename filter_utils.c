@@ -1,30 +1,19 @@
 #include "filter_utils.h"
 
-
-void apply_filter(uint8_t * input, const int* filter, int kernel_size) {
+void box_filter(const Arg *arg,uint8_t * input) {
   size_t x;
   size_t y;
   uint8_t * ary = NULL;
   uint8_t * temp = (uint8_t*) malloc (WIDTH*HEIGHT*3);
 
-  int *indexes;
+  int *indexes = arg->indexes;
 
   memcpy(temp, input, WIDTH*HEIGHT*3);
 
-  switch(kernel_size)
-  {
-    case KERNEL_EXTENDED_SIZE:
-      //TODO add indices for extended kernel
-      break;
-    default:
-      indexes = basic_kernel_indexes;
-      break;
-  }
-
   int R,G,B,i,index,sum = 0;
 
-  for(i = 0; i< kernel_size; i++)
-    sum += filter[i];
+  for(i = 0; i< arg->filter_size; i++)
+    sum += arg->filter[i];
   if(sum == 0)
     sum = 1;
 
@@ -35,13 +24,13 @@ void apply_filter(uint8_t * input, const int* filter, int kernel_size) {
         index = y * WIDTH + x;
         ary = input + (index) * 3;
 
-        for(i = 0; i < kernel_size; i++)
+        for(i = 0; i < arg->filter_size; i++)
           /* prevent wrong indexing */
-          if(index + indexes[i] > 0)
+          if(index + arg->indexes[i] > 0)
           {
-            R += (temp + (index + indexes[i] ) * 3)[0] * filter[i];
-            G += (temp + (index + indexes[i] ) * 3)[1] * filter[i];
-            B += (temp + (index + indexes[i] ) * 3)[2] * filter[i];
+            R += (temp + (index + arg->indexes[i] ) * 3)[0] * arg->filter[i];
+            G += (temp + (index + arg->indexes[i] ) * 3)[1] * arg->filter[i];
+            B += (temp + (index + arg->indexes[i] ) * 3)[2] * arg->filter[i];
           }
 
         ary[0] = max(0, min(255, R/sum));
