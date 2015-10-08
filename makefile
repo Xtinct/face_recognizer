@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-lSDL
+CFLAGS=-lSDL -lm
 DEPS = shared_variables.h
 PACKAGE_NAME = face_recognizer
 
